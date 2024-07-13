@@ -219,6 +219,17 @@
           Plug 'tpope/vim-fugitive'
 
 "             ':Git <cmd>' to do your usual git shenanigans.
+"
+"         Surround shorttucts.
+          Plug 'kylechui/nvim-surround'
+
+"             'ysiw)' surrounds word with '('
+"             'ds]' deletes square braces
+"             'cs)"' changes branches with '"'
+
+
+"         Puppet lang syntax highlighting.
+          Plug 'rodjek/vim-puppet'
 
 
     call plug#end()
