@@ -34,7 +34,7 @@
     nnoremap <leader>v :vsplit:ene<CR>
 "   ',s' to open a new split.
     nnoremap <leader>s :split<CR>:ene<CR>
-"   ',t' to open a new split.
+"   ',t' to open a new tab.
     nnoremap <leader>t :tab<CR>:ene<CR>
 
 "   Navigate windows with WASD ',m<direction>'.
@@ -110,17 +110,27 @@
 "         Fish syntax.
           Plug 'khaveesh/vim-fish-syntax'
 
+"         Colours for the tab line.
+          function! g:BuffetSetCustomColors()
+              hi! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#FFFFFF guifg=#000000
+          endfunction
+
 
 "     Functionality
 "     =============
-"         Better terminal navigation UX than nvim default .
+"         Better terminal navigation UX than nvim default.
           Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 "              ',TR' to open terminal in float.
                nmap <leader>TR <cmd>ToggleTerm<cr>
 
+"              ',TT' to open terminal in tab.
+               nmap <leader>TT <cmd>ToggleTerm direction=tab<cr>
+
 "              ',TG' to open terminal in vertical.
                nmap <leader>TG <cmd>ToggleTerm direction=vertical<cr>
+
+"              ',T' to toggle open / close the terminal (not exit).
 
 "         Organise things into projects.
           Plug 'ahmedkhalf/project.nvim'
@@ -162,8 +172,8 @@
 "             ',fg' to search git files.
               nnoremap <leader>fg <cmd>Telescope git_files<cr>
 "             ',fl' to live grep.
-              nnoremap <leader>fl <cmd>Telescope live_grep_args<cr>
-"             ',fb' to search buffers.
+              nnoremap <leader>fs <cmd>Telescope live_grep_args<cr>
+"             ',fs' to search buffers.
               nnoremap <leader>fb <cmd>Telescope buffers<cr>
 "             ',fe' to live grep.
               nnoremap <leader>fe :lua require('telescope.builtin').live_grep_args({grep_open_files=true})<CR>

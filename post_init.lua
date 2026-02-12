@@ -26,6 +26,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 require("toggleterm").setup{
   size = 50,
   direction = 'float',
+  shade_terminals = false,
   winbar = {
     enabled = true,
     name_formatter = function(term) --  term: Terminal
