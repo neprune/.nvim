@@ -172,9 +172,9 @@
 "             ',fg' to search git files.
               nnoremap <leader>fg <cmd>Telescope git_files<cr>
 "             ',fl' to live grep.
-              nnoremap <leader>fs <cmd>Telescope live_grep_args<cr>
+              nnoremap <leader>fl <cmd>Telescope live_grep_args<cr>
 "             ',fs' to search buffers.
-              nnoremap <leader>fb <cmd>Telescope buffers<cr>
+              nnoremap <leader>fs <cmd>Telescope buffers<cr>
 "             ',fe' to live grep.
               nnoremap <leader>fe :lua require('telescope.builtin').live_grep_args({grep_open_files=true})<CR>
 "             ',fw' to search projects.
