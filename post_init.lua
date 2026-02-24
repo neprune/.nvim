@@ -41,5 +41,8 @@ require('telescope').load_extension("termfinder")
 -- Add a telescope picker for live_grep_args.
 require('telescope').load_extension("live_grep_args")
 
+-- Needed for nvim-surround to work.
+require("nvim-surround").setup({})
+
 -- Setup custom terminals.
 -- local Terminal  = require('toggleterm.terminal').Terminal
