@@ -16,11 +16,8 @@
 "   Show me whitespace stuff.
     set list
 
-"   Show line numbers...
+"   Show line numbers (terminals are handled in post_init.lua).
     set number
-"   apart from for terminals.
-    autocmd TermOpen * setlocal nonumber norelativenumber
-
 
 "   Open new vertical splits to the right.
     set splitright
@@ -31,18 +28,17 @@
 "   ',q' to close current split.
     nnoremap <leader>q :q<CR>
 "   ',v' to open a new vsplit.
-    nnoremap <leader>v :vsplit:ene<CR>
+    nnoremap <leader>v :vsplit<CR>:ene<CR>
 "   ',s' to open a new split.
     nnoremap <leader>s :split<CR>:ene<CR>
-"   ',t' to open a new tab.
-    nnoremap <leader>t :tab<CR>:ene<CR>
+"   ',tn' to open a new tab.
+    nnoremap <leader>tn :tabnew<CR>
 
 "   Navigate windows with WASD ',m<direction>'.
-    map <leader>mw <C-w><Up>
-    map <leader>ma <C-w>h
-    map <leader>ms <C-w><Down>
-    map <leader>md <C-w>l
-
+    nnoremap <leader>mw <C-w><Up>
+    nnoremap <leader>ma <C-w>h
+    nnoremap <leader>ms <C-w><Down>
+    nnoremap <leader>md <C-w>l
 
 "   ',t<number>' to go to numbered tab.
     nnoremap <leader>t1 1gt
@@ -57,23 +53,19 @@
     nnoremap <leader>t0 :tablast<CR>
 
 "   ',cv' to open the vimrc in a in vertical split.
-    map <leader>cv :vsp $MYVIMRC<CR>
+    nnoremap <leader>cv :vsp $MYVIMRC<CR>
 "   ',cs' to open the vimrc in a in horizontal split.
-    map <leader>cs :sp $MYVIMRC<CR>
+    nnoremap <leader>cs :sp $MYVIMRC<CR>
 "   ',ct' to open the vimrc in a in a new tab.
-    map <leader>ct :tabnew $MYVIMRC<CR>
+    nnoremap <leader>ct :tabnew $MYVIMRC<CR>
 "   ',c.' to open the vimrc in the current buffer.
-    map <leader>c. :e $MYVIMRC<CR>
+    nnoremap <leader>c. :e $MYVIMRC<CR>
 "   ',cr' to reload the vimrc.
-    map <leader>cr :source $MYVIMRC<CR>
-
-"   Use 'tab' to cycle through auto-complete suggestions.
-    inoremap <expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
+    nnoremap <leader>cr :source $MYVIMRC<CR>
 
 "    Navigate errors.
-     map <C-n> :cnext<CR>
-     map <C-m> :cprevious<CR>
+     nnoremap <C-n> :cnext<CR>
+     nnoremap <C-p> :cprevious<CR>
      nnoremap <leader>a :cclose<CR>
 
 "    Copy to system clipboard.
@@ -81,6 +73,19 @@
 
 "    No swapfiles - I tend to save regularly and don't appreciate the faff.
      set noswapfile
+
+"    Persistent undo across sessions (stored under stdpath('state')/undo).
+     set undofile
+
+"    Auto-reload files changed outside nvim.
+     set autoread
+
+"    Case-insensitive search, unless the pattern contains a capital.
+     set ignorecase
+     set smartcase
+
+"    Keep 8 lines of context above / below the cursor while scrolling.
+     set scrolloff=8
 
 " Plugins (using vim-plug)
 " ========================
@@ -110,27 +115,19 @@
 "         Fish syntax.
           Plug 'khaveesh/vim-fish-syntax'
 
-"         Colours for the tab line.
-          function! g:BuffetSetCustomColors()
-              hi! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#FFFFFF guifg=#000000
-          endfunction
-
-
 "     Functionality
 "     =============
 "         Better terminal navigation UX than nvim default.
           Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
-"              ',TR' to open terminal in float.
-               nmap <leader>TR <cmd>ToggleTerm<cr>
+"              ',Tf' float, ',Th' horizontal, ',Tv' vertical, ',Tt' tab.
+               nnoremap <leader>Tf <cmd>ToggleTerm direction=float<cr>
+               nnoremap <leader>Th <cmd>ToggleTerm direction=horizontal<cr>
+               nnoremap <leader>Tv <cmd>ToggleTerm direction=vertical<cr>
+               nnoremap <leader>Tt <cmd>ToggleTerm direction=tab<cr>
 
-"              ',TT' to open terminal in tab.
-               nmap <leader>TT <cmd>ToggleTerm direction=tab<cr>
-
-"              ',TG' to open terminal in vertical.
-               nmap <leader>TG <cmd>ToggleTerm direction=vertical<cr>
-
-"              ',T' to toggle open / close the terminal (not exit).
+"              ',Tn' to rename the current terminal (prompts).
+               nnoremap <leader>Tn <cmd>ToggleTermSetName<cr>
 
 "         Organise things into projects.
           Plug 'ahmedkhalf/project.nvim'
@@ -142,23 +139,20 @@
 "             'gS' to split a line.
 "             'gJ' to join multiple lines.
 
-"         IDE like tabs.
-          Plug 'bagrat/vim-buffet'
+"         IDE like tabs (configured in post_init.lua).
+          Plug 'akinsho/bufferline.nvim'
 
-"              Show numbers.
-               let g:buffet_show_index=1
-
-"              Switch between buffers.
-               nmap <leader>1 <Plug>BuffetSwitch(1)
-               nmap <leader>2 <Plug>BuffetSwitch(2)
-               nmap <leader>3 <Plug>BuffetSwitch(3)
-               nmap <leader>4 <Plug>BuffetSwitch(4)
-               nmap <leader>5 <Plug>BuffetSwitch(5)
-               nmap <leader>6 <Plug>BuffetSwitch(6)
-               nmap <leader>7 <Plug>BuffetSwitch(7)
-               nmap <leader>8 <Plug>BuffetSwitch(8)
-               nmap <leader>9 <Plug>BuffetSwitch(9)
-               nmap <leader>0 <Plug>BuffetSwitch(10)
+"              ',1'..',9' / ',0' jump to the Nth visible buffer (renumbers as buffers close).
+               nnoremap <leader>1 <cmd>BufferLineGoToBuffer 1<cr>
+               nnoremap <leader>2 <cmd>BufferLineGoToBuffer 2<cr>
+               nnoremap <leader>3 <cmd>BufferLineGoToBuffer 3<cr>
+               nnoremap <leader>4 <cmd>BufferLineGoToBuffer 4<cr>
+               nnoremap <leader>5 <cmd>BufferLineGoToBuffer 5<cr>
+               nnoremap <leader>6 <cmd>BufferLineGoToBuffer 6<cr>
+               nnoremap <leader>7 <cmd>BufferLineGoToBuffer 7<cr>
+               nnoremap <leader>8 <cmd>BufferLineGoToBuffer 8<cr>
+               nnoremap <leader>9 <cmd>BufferLineGoToBuffer 9<cr>
+               nnoremap <leader>0 <cmd>BufferLineGoToBuffer 10<cr>
 
 "         Fuzzy finder.
           Plug 'nvim-lua/plenary.nvim'
@@ -210,37 +204,42 @@
 "             ', ' to open and focus the tree view.
               nnoremap <leader><space> <cmd>NvimTreeFocus<cr>
 
+"             ',e' to toggle the tree view (show / hide).
+              nnoremap <leader>e <cmd>NvimTreeToggle<cr>
+
 "             ',w' focus on current open file in tree view.
               nnoremap <leader>w <cmd>NvimTreeFindFile<cr>
 
 "         Comment and uncomment stuff.
-          Plug 'scrooloose/nerdcommenter'
+          Plug 'preservim/nerdcommenter'
 
 "             ',cc' to comment.
 "             ',cu' to uncomment.
 
-"         Autocomplete.
-          Plug 'shougo/deoplete.nvim'
-
-"             Run at startup.
-              let g:deoplete#enable_at_startup = 1
+"         Autocomplete (configured in post_init.lua).
+          Plug 'hrsh7th/nvim-cmp'
+          Plug 'hrsh7th/cmp-buffer'
+          Plug 'hrsh7th/cmp-path'
 
 "         Run git commands.
           Plug 'tpope/vim-fugitive'
 
 "             ':Git <cmd>' to do your usual git shenanigans.
 "
-"         Surround shorttucts.
+"         Surround shortcuts.
           Plug 'kylechui/nvim-surround'
 
 "             'ysiw)' surrounds word with '('
 "             'ds]' deletes square braces
-"             'cs)"' changes branches with '"'
+"             'cs)"' changes braces with '"'
 
 
 "         Puppet lang syntax highlighting.
           Plug 'rodjek/vim-puppet'
 
+
+"         Image previews.
+          Plug 'adelarsq/image_preview.nvim'
 
     call plug#end()
 
@@ -259,5 +258,5 @@
 
 " Colorscheme
 " =======================
-      set termguicolors
-      colorscheme NeoSolarized
+    set termguicolors
+    colorscheme NeoSolarized
