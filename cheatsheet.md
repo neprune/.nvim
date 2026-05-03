@@ -1,10 +1,11 @@
 # Cheatsheet
 
-Leader is `,`. Press `q` or `<Esc>` to close.
+Leader is `,`. Press `,,` to toggle this view. Edit freely; `:w` saves to disk.
+Hold `,` (or any prefix) and pause for a moment — which-key shows what's available.
 
 ## General
   `jj`              Escape insert mode
-  `,,`              Show this cheatsheet
+  `,,`              Toggle this cheatsheet
   `,q`              Close current split
 
 ## Splits & tabs
@@ -14,9 +15,10 @@ Leader is `,`. Press `q` or `<Esc>` to close.
   `,t0`             Switch to last tab
   `,m{w,a,s,d}`     Window navigation (up / left / down / right)
 
-## Buffers (bufferline)
+## Buffers
   `,1`..`,9`        Switch to visible buffer 1..9 (renumbers as buffers close)
   `,0`              Switch to visible buffer 10
+  `,bd`             Delete current buffer, keep the window (mini.bufremove)
 
 ## Config
   `,cv` / `,cs`     Open vimrc in vertical / horizontal split
@@ -43,6 +45,23 @@ Leader is `,`. Press `q` or `<Esc>` to close.
   `,e`              Toggle tree (show / hide)
   `,w`              Reveal current file in tree
 
+## Filesystem-as-buffer (oil.nvim)
+  `-`               Open parent directory as an oil buffer
+
+  Inside an oil buffer you edit the listing like text:
+    Rename a file by editing its name.
+    Delete a file by deleting its line.
+    Move a file by cutting and pasting between oil buffers.
+    Press `:w` to apply changes to disk.
+    Press `-` again to go up another level.
+
+## Quick jump (flash.nvim)
+  `s` + chars       Jump to any position on screen — type `s` then the
+                    start of what you want; press the shown label key to teleport.
+  `S`               Jump to a treesitter node (function names, blocks, etc).
+
+  Note: `s` overrides vim's default substitute-char (use `cl` instead).
+
 ## Terminal (toggleterm)
   `,Tf`             Open terminal as float
   `,Th`             Open terminal as horizontal split
@@ -56,7 +75,14 @@ Leader is `,`. Press `q` or `<Esc>` to close.
   `yc{motion}`      Yank to system clipboard
   `ga{motion}`      EasyAlign — e.g. `gaip2=` aligns paragraph at 2nd `=`
   `gS` / `gJ`       Split / join line (splitjoin)
-  `,cc` / `,cu`     Comment / uncomment selection (NerdCommenter)
+  `gcc`             Toggle line comment (Comment.nvim)
+  `gc{motion}`      Comment a region — e.g. `gcip` for paragraph
+  `gc` (visual)     Comment current selection
+  `Alt+h/j/k/l`     Move current line / visual selection (mini.move)
+
+  Auto-pairs: typing `(`, `[`, `{`, `"`, `'` auto-inserts the closing pair (mini.pairs).
+  Indent settings auto-detect per file (vim-sleuth).
+  Indent guides drawn at every level (indent-blankline).
 
 ## Surround (nvim-surround)
   Opening bracket adds spaces, closing doesn't:
@@ -84,5 +110,44 @@ Leader is `,`. Press `q` or `<Esc>` to close.
 
   Targets: `(` `[` `{` `<` `'` `"`   `t` (tag)   `f` (function call)
 
-## Autocomplete
+## Git (gitsigns)
+  `]c` / `[c`       Next / previous changed hunk
+  `,gs`             Stage hunk under cursor
+  `,gr`             Reset hunk under cursor
+  `,gp`             Preview hunk in a popup
+  `,gb`             Toggle inline blame for the current line
+
+  The sign column shows `+` / `~` / `_` markers per added / changed / deleted line.
+  For full-repo git operations, use `:Git status`, `:Git blame`, etc. (vim-fugitive).
+
+## LSP (language server protocol)
+  Set up servers per language with `:Mason` (UI) or `:MasonInstall <name>`.
+  Once a server attaches to a buffer, these bindings activate:
+
+  Navigation:
+    `gd`            Go to definition
+    `gD`            Go to declaration
+    `gr`            List references
+    `gi`            Go to implementation
+    `K`             Hover docs (press `K` again to enter the popup)
+
+  Refactoring:
+    `,lr`           Rename symbol (across the workspace)
+    `,la`           Code action (quick fixes, refactors)
+    `,lf`           Format buffer
+
+  Diagnostics inline + virtual-text are on by default; trouble.nvim shows the panel.
+
+## Diagnostics (trouble.nvim)
+  `,xx`             Toggle workspace diagnostics panel
+  `,xd`             Document-only diagnostics
+  `,xq`             Quickfix list in trouble
+  `,xl`             Location list in trouble
+
+  Inside trouble: `<CR>` jump, `q` close, `?` help.
+
+## Autocomplete (nvim-cmp)
   `<Tab>` / `<S-Tab>`   Cycle completion menu
+  `<CR>`                Confirm selection (only when one is highlighted)
+
+  Sources: buffer words, file paths, active LSP servers.

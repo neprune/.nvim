@@ -115,6 +115,9 @@
 "         Fish syntax.
           Plug 'khaveesh/vim-fish-syntax'
 
+"         Subtle vertical guides at each indent level.
+          Plug 'lukas-reineke/indent-blankline.nvim'
+
 "     Functionality
 "     =============
 "         Better terminal navigation UX than nvim default.
@@ -210,16 +213,66 @@
 "             ',w' focus on current open file in tree view.
               nnoremap <leader>w <cmd>NvimTreeFindFile<cr>
 
-"         Comment and uncomment stuff.
-          Plug 'preservim/nerdcommenter'
+"         Edit your filesystem like a buffer — '-' opens parent dir.
+          Plug 'stevearc/oil.nvim'
 
-"             ',cc' to comment.
-"             ',cu' to uncomment.
+"             '-' open parent directory as an oil buffer.
+"             In an oil buffer: edit lines like text (rename / delete / move), then ':w' to apply.
+
+"         Comment / uncomment with treesitter awareness.
+          Plug 'numToStr/Comment.nvim'
+
+"             'gcc' to toggle a line comment.
+"             'gc{motion}' to comment a region (e.g. 'gcip' for paragraph).
+"             'gc' in visual mode to comment a selection.
 
 "         Autocomplete (configured in post_init.lua).
           Plug 'hrsh7th/nvim-cmp'
           Plug 'hrsh7th/cmp-buffer'
           Plug 'hrsh7th/cmp-path'
+          Plug 'hrsh7th/cmp-nvim-lsp'
+
+"         LSP — ':Mason' opens the server installer UI.
+          Plug 'williamboman/mason.nvim'
+          Plug 'williamboman/mason-lspconfig.nvim'
+          Plug 'neovim/nvim-lspconfig'
+
+"             'gd' definition, 'gD' declaration, 'gr' references, 'gi' implementation.
+"             'K' hover docs. ',lr' rename. ',la' code action. ',lf' format.
+"             '[d' / ']d' previous / next diagnostic.
+
+"         Sign-column git markers + hunk staging / blame.
+          Plug 'lewis6991/gitsigns.nvim'
+
+"             ']c' / '[c' next / previous hunk.
+"             ',gs' stage hunk, ',gr' reset hunk, ',gp' preview hunk, ',gb' toggle blame.
+
+"         Better quickfix / diagnostics UI (replaces native :copen).
+          Plug 'folke/trouble.nvim'
+
+"             ',xx' toggle, ',xd' doc diagnostics, ',xw' workspace diagnostics.
+"             ',xq' quickfix list, ',xl' location list.
+              nnoremap <leader>xx <cmd>Trouble diagnostics toggle<cr>
+              nnoremap <leader>xd <cmd>Trouble diagnostics toggle filter.buf=0<cr>
+              nnoremap <leader>xw <cmd>Trouble diagnostics toggle<cr>
+              nnoremap <leader>xq <cmd>Trouble qflist toggle<cr>
+              nnoremap <leader>xl <cmd>Trouble loclist toggle<cr>
+
+"         Popup that lists mappings when leader is held briefly.
+          Plug 'folke/which-key.nvim'
+
+"         Auto-detect indent settings (tabs / spaces / width) per file.
+          Plug 'tpope/vim-sleuth'
+
+"         Fast jump to anywhere visible. 's' jump, 'S' treesitter-aware jump.
+          Plug 'folke/flash.nvim'
+
+"         Modular utilities — using bufremove, pairs, move.
+          Plug 'echasnovski/mini.nvim'
+
+"             ',bd' delete buffer without closing the window (mini.bufremove).
+"             'Alt+h/j/k/l' move line / visual selection (mini.move).
+"             Auto-close brackets / quotes (mini.pairs).
 
 "         Run git commands.
           Plug 'tpope/vim-fugitive'

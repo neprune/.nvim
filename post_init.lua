@@ -69,10 +69,11 @@ require("bufferline").setup({
   },
 })
 
--- Configure nvim-cmp (autocomplete). Buffer + path sources, no LSP / snippets.
+-- Configure nvim-cmp (autocomplete). Buffer + path + LSP sources.
 local cmp = require("cmp")
 cmp.setup({
   sources = {
+    { name = "nvim_lsp" },
     { name = "buffer" },
     { name = "path" },
   },
@@ -105,6 +106,83 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
 -- Double-Esc to leave terminal mode (single Esc is intercepted by shell vi mode).
 vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+
+-- which-key: popup of mappings when leader is held briefly.
+require("which-key").setup({ delay = 500 })
+require("which-key").add({
+  { "<leader>c", group = "config" },
+  { "<leader>f", group = "find (telescope)" },
+  { "<leader>g", group = "git (gitsigns)" },
+  { "<leader>l", group = "LSP" },
+  { "<leader>m", group = "window (wasd)" },
+  { "<leader>t", group = "tabs" },
+  { "<leader>T", group = "terminal" },
+  { "<leader>x", group = "trouble (diagnostics)" },
+  { "<leader>b", group = "buffer" },
+})
+
+-- Comment.nvim: 'gcc' line, 'gc{motion}' operator, 'gc' visual.
+require("Comment").setup()
+
+-- gitsigns: sign-column markers, hunk staging, blame.
+require("gitsigns").setup({
+  on_attach = function(bufnr)
+    local gs = require("gitsigns")
+    local map = function(lhs, rhs, desc)
+      vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+    end
+    map("]c", function() gs.nav_hunk("next") end, "Next git hunk")
+    map("[c", function() gs.nav_hunk("prev") end, "Previous git hunk")
+    map("<leader>gs", gs.stage_hunk,        "Stage hunk")
+    map("<leader>gr", gs.reset_hunk,        "Reset hunk")
+    map("<leader>gp", gs.preview_hunk,      "Preview hunk")
+    map("<leader>gb", gs.toggle_current_line_blame, "Toggle line blame")
+  end,
+})
+
+-- LSP: mason auto-installs servers (':Mason' UI), mason-lspconfig wires them up,
+-- nvim-lspconfig configures the client. cmp-nvim-lsp expands client capabilities.
+require("mason").setup()
+require("mason-lspconfig").setup({ automatic_enable = true })
+local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+vim.lsp.config("*", { capabilities = lsp_capabilities })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local map = function(lhs, rhs, desc)
+      vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+    end
+    map("gd", vim.lsp.buf.definition,     "LSP: go to definition")
+    map("gD", vim.lsp.buf.declaration,    "LSP: go to declaration")
+    map("gr", vim.lsp.buf.references,     "LSP: list references")
+    map("gi", vim.lsp.buf.implementation, "LSP: go to implementation")
+    map("K",  vim.lsp.buf.hover,          "LSP: hover docs")
+    map("<leader>lr", vim.lsp.buf.rename,      "LSP: rename symbol")
+    map("<leader>la", vim.lsp.buf.code_action, "LSP: code action")
+    map("<leader>lf", function() vim.lsp.buf.format({ async = true }) end, "LSP: format buffer")
+  end,
+})
+
+-- trouble.nvim: better diagnostics / quickfix UI. Bindings live in init.vim.
+require("trouble").setup()
+
+-- flash.nvim: 's' = jump, 'S' = treesitter jump (defaults).
+require("flash").setup()
+
+-- mini.nvim modules (selective).
+require("mini.bufremove").setup()
+require("mini.pairs").setup()
+require("mini.move").setup()
+vim.keymap.set("n", "<leader>bd", function() require("mini.bufremove").delete() end,
+  { desc = "Delete buffer (keep window)" })
+
+-- oil.nvim: edit your filesystem like a buffer; '-' opens parent dir.
+require("oil").setup()
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent dir (oil)" })
+
+-- indent-blankline: subtle vertical indent guides.
+require("ibl").setup()
 
 -- Cheatsheet floating window, bound to ',,' (toggles, ':w' saves edits).
 local cheat_win = nil
