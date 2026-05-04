@@ -27,10 +27,10 @@
 
 "   ',q' to close current split.
     nnoremap <leader>q :q<CR>
-"   ',v' to open a new vsplit.
-    nnoremap <leader>v :vsplit<CR>:ene<CR>
-"   ',s' to open a new split.
-    nnoremap <leader>s :split<CR>:ene<CR>
+"   ',v' to open a vsplit of the current buffer.
+    nnoremap <leader>v :vsplit<CR>
+"   ',s' to open a horizontal split of the current buffer.
+    nnoremap <leader>s :split<CR>
 "   ',tn' to open a new tab.
     nnoremap <leader>tn :tabnew<CR>
 
@@ -120,17 +120,7 @@
 
 "     Functionality
 "     =============
-"         Better terminal navigation UX than nvim default.
-          Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
-
-"              ',Tf' float, ',Th' horizontal, ',Tv' vertical, ',Tt' tab.
-               nnoremap <leader>Tf <cmd>ToggleTerm direction=float<cr>
-               nnoremap <leader>Th <cmd>ToggleTerm direction=horizontal<cr>
-               nnoremap <leader>Tv <cmd>ToggleTerm direction=vertical<cr>
-               nnoremap <leader>Tt <cmd>ToggleTerm direction=tab<cr>
-
-"              ',Tn' to rename the current terminal (prompts).
-               nnoremap <leader>Tn <cmd>ToggleTermSetName<cr>
+"         Terminal mappings (',rh', ',rv', ',rt', ',rc', ',rn') live in post_init.lua.
 
 "         Organise things into projects.
           Plug 'ahmedkhalf/project.nvim'
@@ -176,17 +166,13 @@
               nnoremap <leader>fe :lua require('telescope.builtin').live_grep_args({grep_open_files=true})<CR>
 "             ',fw' to search projects.
               nnoremap <leader>fw :lua require'telescope'.extensions.projects.projects{}<CR>
-"             ',fv' to search terminals.
-              nnoremap <leader>fv <cmd>Telescope termfinder<cr>
+"             ',fv' to search terminals (defined in post_init.lua).
 
 
 "             In normal mode:
 "             'Ctrl+t' open entry in new tab.
 "             'Ctrl+v' and 'Ctrl+x' open entry in a new vertical/horizontal split.
 "             '?' view mappings.
-
-"         Toggleterm telescope picker.
-          Plug 'git@github.com:tknightz/telescope-termfinder.nvim.git'
 
 
 "         Align a block around some chosen character.
@@ -250,11 +236,10 @@
 "         Better quickfix / diagnostics UI (replaces native :copen).
           Plug 'folke/trouble.nvim'
 
-"             ',xx' toggle, ',xd' doc diagnostics, ',xw' workspace diagnostics.
+"             ',xx' toggle (workspace diagnostics), ',xd' doc diagnostics.
 "             ',xq' quickfix list, ',xl' location list.
               nnoremap <leader>xx <cmd>Trouble diagnostics toggle<cr>
               nnoremap <leader>xd <cmd>Trouble diagnostics toggle filter.buf=0<cr>
-              nnoremap <leader>xw <cmd>Trouble diagnostics toggle<cr>
               nnoremap <leader>xq <cmd>Trouble qflist toggle<cr>
               nnoremap <leader>xl <cmd>Trouble loclist toggle<cr>
 
@@ -285,6 +270,19 @@
 "             'ysiw)' surrounds word with '('
 "             'ds]' deletes square braces
 "             'cs)"' changes braces with '"'
+
+
+"         Workspaces — vim tab pages, named and persisted across nvim restarts.
+"         resession persists; scope scopes the buffer list to the current tab
+"         (so the bufferline at the top is per-workspace).
+          Plug 'stevearc/resession.nvim'
+          Plug 'tiagovla/scope.nvim'
+
+"             ',Ws' save current tab as a workspace (prompts on first save).
+"             ',Wo' picker over saved workspaces — <CR> open, <C-r> rename, <C-d> delete.
+"             ',Ww' picker over open workspaces (or '+ New workspace').
+"             ',Wx' close current tab (saved copy stays on disk).
+"             Mappings + extension for terminals live in post_init.lua.
 
 
 "         Puppet lang syntax highlighting.

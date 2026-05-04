@@ -9,7 +9,7 @@ Hold `,` (or any prefix) and pause for a moment — which-key shows what's avail
   `,q`              Close current split
 
 ## Splits & tabs
-  `,v` / `,s`       New vertical / horizontal split
+  `,v` / `,s`       Split current buffer vertically / horizontally
   `,tn`             New tab
   `,t1`..`,t9`      Switch to tab 1..9
   `,t0`             Switch to last tab
@@ -19,6 +19,27 @@ Hold `,` (or any prefix) and pause for a moment — which-key shows what's avail
   `,1`..`,9`        Switch to visible buffer 1..9 (renumbers as buffers close)
   `,0`              Switch to visible buffer 10
   `,bd`             Delete current buffer, keep the window (mini.bufremove)
+  Buffers are scoped to the current tab (scope.nvim), so the bufferline at the
+  top shows only this workspace's buffers.
+
+## Workspaces (resession)
+  A workspace is a vim tab page with a name + persisted snapshot of its open
+  files and terminal shells. The workspace name shows as the tab indicator
+  label on the right of the bufferline. New tabs default to `untitled`.
+  `,Ws`             Save current tab as a workspace (prompts for name when the
+                    current name is still `untitled`)
+  `,Ww`             Switch open workspaces — picker over current tab pages, plus
+                    `+ New workspace` to create a fresh untitled tab
+  `,Wo`             Saved workspaces picker (open from disk):
+                      `<CR>`  open in current tab if it's a disposable untitled,
+                              else open in a new tab
+                      `<C-r>` rename the highlighted saved workspace
+                      `<C-d>` delete the highlighted saved workspace
+  `,Wx`             Close current tab (saved copy stays on disk)
+
+  Floating prompts (terminal rename, workspace save) support full vim editing —
+  `jj` to escape to normal mode, motions to edit, `<CR>` to confirm, `<Esc>`
+  (in normal mode) or `<C-c>` (in any mode) to cancel.
 
 ## Config
   `,cv` / `,cs`     Open vimrc in vertical / horizontal split
@@ -62,14 +83,16 @@ Hold `,` (or any prefix) and pause for a moment — which-key shows what's avail
 
   Note: `s` overrides vim's default substitute-char (use `cl` instead).
 
-## Terminal (toggleterm)
-  `,Tf`             Open terminal as float
-  `,Th`             Open terminal as horizontal split
-  `,Tv`             Open terminal as vertical split
-  `,Tt`             Open terminal as tab
-  `,Tn`             Rename current terminal (prompts)
+## Terminal
+  `,rh`             Open terminal as horizontal split (half the available rows)
+  `,rv`             Open terminal as vertical split (half the available cols)
+  `,rt`             Open terminal in a new vim tab page
+  `,rc`             Open terminal in the current window (replaces current buffer)
+  `,rn`             Rename current terminal (prompts; runs `:file <name>`)
   `<Esc><Esc>`      Exit terminal mode (back to nvim normal mode)
-  `,fv`             Telescope picker for switching between terminals
+  `,fv`             Telescope picker over open terminal buffers
+  Terminals are listed buffers, so they show up in the bufferline at the top
+  and are reachable via `,1`..`,9` / `,0` like any other buffer.
 
 ## Editing
   `yc{motion}`      Yank to system clipboard
