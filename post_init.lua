@@ -543,7 +543,7 @@ vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent dir (oil)" })
 -- indent-blankline: subtle vertical indent guides.
 require("ibl").setup()
 
--- Cheatsheet floating window, bound to ',,' (toggles, ':w' saves edits).
+-- Cheatsheet floating window, toggled by ',,'.
 local cheat_win = nil
 
 local function show_cheatsheet()
@@ -558,13 +558,10 @@ local function show_cheatsheet()
   vim.api.nvim_set_hl(0, "CheatSection", { fg = "#268bd2", bold = true })  -- solarized blue
   vim.api.nvim_set_hl(0, "CheatCode",    { fg = "#859900" })               -- solarized green
 
-  local path = vim.fn.stdpath("config") .. "/cheatsheet.md"
-  local buf = vim.fn.bufadd(path)
-  vim.fn.bufload(buf)
-  vim.bo[buf].filetype = "cheatsheet"
-
   local width = math.min(110, vim.o.columns - 4)
   local height = vim.o.lines - 4
+  local buf = require("cheatsheet").create_buf(height)
+
   cheat_win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = width,
@@ -573,19 +570,10 @@ local function show_cheatsheet()
     row = math.floor((vim.o.lines - height) / 2),
     style = "minimal",
     border = "rounded",
-    title = " Cheatsheet  (,, to toggle  ·  :w to save) ",
+    title = " Cheatsheet  (,, to toggle) ",
     title_pos = "center",
   })
   vim.wo[cheat_win].winhighlight = "FloatBorder:CheatSection,FloatTitle:CheatTitle"
-
-  vim.api.nvim_buf_call(buf, function()
-    vim.cmd([[
-      syntax clear
-      syntax match CheatTitle   /^#\s.*$/
-      syntax match CheatSection /^##\s.*$/
-      syntax match CheatCode    /`[^`]\+`/
-    ]])
-  end)
 end
 
 vim.keymap.set("n", "<leader><leader>", show_cheatsheet, { desc = "Toggle cheatsheet" })
