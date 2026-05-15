@@ -540,9 +540,6 @@ vim.keymap.set("n", "<leader>bd", function() require("mini.bufremove").delete() 
 require("oil").setup()
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent dir (oil)" })
 
--- indent-blankline: subtle vertical indent guides.
-require("ibl").setup()
-
 -- Cheatsheet floating window, toggled by ',,'.
 local cheat_win = nil
 

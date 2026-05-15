@@ -115,9 +115,6 @@
 "         Fish syntax.
           Plug 'khaveesh/vim-fish-syntax'
 
-"         Subtle vertical guides at each indent level.
-          Plug 'lukas-reineke/indent-blankline.nvim'
-
 "     Functionality
 "     =============
 "         Terminal mappings (',rh', ',rv', ',rt', ',rc', ',rn') live in post_init.lua.
