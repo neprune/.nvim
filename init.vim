@@ -146,8 +146,8 @@
 
 "         Fuzzy finder.
           Plug 'nvim-lua/plenary.nvim'
-          Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
-          Plug 'nvim-treesitter/nvim-treesitter'
+          Plug 'nvim-telescope/telescope.nvim', { 'tag': 'v0.2.2' }
+          Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
 "         Pass flags to ripgrep picker.
           Plug 'nvim-telescope/telescope-live-grep-args.nvim'
 

@@ -437,12 +437,25 @@ cmp.setup({
   }),
 })
 
--- Configure treesitter.
-require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "vim", "vimdoc", "json", "fish", "puppet" },
-  auto_install = true,
-  highlight = { enable = true },
-  indent = { enable = true },
+-- Configure treesitter (nvim-treesitter `main` branch).
+--
+-- The rewritten `main` branch dropped the old `configs.setup{}` module system:
+-- highlighting/indent are now opt-in per buffer via Neovim's built-in treesitter,
+-- and parsers are installed explicitly (built locally with tree-sitter-cli). This
+-- replaces the frozen `master` branch, which is unsupported on Neovim 0.12+.
+require("nvim-treesitter").install({
+  "lua", "vim", "vimdoc", "json", "fish", "puppet",
+  "bash", "perl", "python", "yaml", "markdown", "markdown_inline", "diff",
+})
+
+-- Enable treesitter highlighting + indentation for any buffer whose filetype has
+-- an installed parser. Replaces the old `highlight`/`indent` module flags.
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(args)
+    if pcall(vim.treesitter.start, args.buf) then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
 })
 
 -- Terminal buffer defaults.
